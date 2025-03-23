@@ -4,6 +4,8 @@ $(function () {
     timer;
 
   $("#start").click(function () {
+    foodList = getFoodListLocalStorageCache();
+    
     // 优先从外部 foodList 获取数据，否则使用 HTML 的 <textarea> 中的数据作为备用
     var list = typeof foodList !== "undefined"
       ? foodList
@@ -60,6 +62,9 @@ $(function () {
 
   // 支持通过回车键触发
   document.onkeydown = function enter(e) {
+    if (document.activeElement.id == "foodList") {
+      return;
+    }
     var e = e || event;
     if (e.keyCode == 13) $("#start").trigger("click");
   };
