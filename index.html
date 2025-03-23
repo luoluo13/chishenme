@@ -74,6 +74,9 @@
     </style>
   </head>
   <body>
+    <div id="menu">
+      <textarea name="food_list" id="foodList" class="food_list_area">111</textarea>
+    </div>
     <div id="wrapper">
       <h1>
         中午吃什么，吃什么？
@@ -94,18 +97,68 @@
 		</div>
 
 
+    <script src="storage.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-    <script src="菜谱.js"></script>
+    <script src="food_list.js"></script>
     <script src="random.js"></script>
     <script src="three_punch_combo.js"></script>
 
     <script>
+      function displayFoodList() {
+        // Clear Cache
+        $("#foodList").val("");
+        // Serialize Cache To Display
+        getFoodListLocalStorageCache().forEach(food => {
+          $("#foodList").val($("#foodList").val() + food + "\n");
+        });
+      }
+
+      function updateFoodListFromInputText() {
+        const input = $("#foodList").val()
+
+        // 1. 去除开头和结尾的空白字符
+        const trimmedInput = input.trim();
+
+        // 2. 按换行符分割字符串
+        const stringArray = trimmedInput.split("\n");
+
+        let foodList = [];
+        stringArray.forEach(food => {
+          foodList.push(food);
+        }); 
+
+        setFoodListLocalStorage(foodList);
+      }
+
       $(document).ready(function () {
         let foodIndex = 0; // 点击次数
         let isRunning = false; // 是否开始了随机选菜
+        
+        // clearFoodListLocalStorage();
+        // Local Storage Init
+
+        const localStorageFoodListCache = getFoodListLocalStorageCache();
+        if (localStorageFoodListCache == null || localStorageFoodListCache === "") {
+          setFoodListLocalStorage(defaultFoodList);
+        }
+
+        // Display
+        displayFoodList();
 
         // 点击“开始”按钮
         $("#start").click(function () {
+
+          if (isRunning) {
+            $("#menu").show();
+          } else {
+            $("#menu").hide();
+          }
+
+          // update FoodList
+          updateFoodListFromInputText();
+
+          const foodList = getFoodListLocalStorageCache();
+
           if (isRunning) {
             return; // 防止重复点击
           }
