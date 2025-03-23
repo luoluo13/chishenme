@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>格式化输入</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+      resize: none;
+    }
+    button {
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+	input{
+	  width: 500px;
+	  height: 80px;
+	}
+  </style>
+</head>
+<body>
+  <h1>将菜谱转为js格式</h1>
+  <label for="input">请输入内容（用中文逗号隔开）：</label>
+  <input type="text" id="input" placeholder="例如：苹果，香蕉，草莓" />
+  <div>
+    <button id="formatButton">格式化</button>
+    <button id="copyButton">复制格式文本</button>
+  </div>
+  <textarea id="output" readonly></textarea>
+
+  <script>
+    // 获取 HTML 元素
+    const inputField = document.getElementById('input');
+    const formatButton = document.getElementById('formatButton');
+    const copyButton = document.getElementById('copyButton');
+    const outputField = document.getElementById('output');
+
+    // 点击“格式化”按钮的事件
+    formatButton.addEventListener('click', () => {
+      // 获取用户输入的值并去掉首尾空格
+      const userInput = inputField.value.trim();
+
+      // 检查输入是否为空
+      if (!userInput) {
+        alert('请输入内容！');
+        return;
+      }
+
+      // 按逗号分割并去掉每个项的多余空格
+      const items = userInput.split(',').map(item => item.trim());
+
+      // 格式化为目标字符串
+      const formattedOutput = `const foodList = [\n  "${items.join('", "')}"\n];`;
+
+      // 将结果显示在文本框中
+      outputField.value = formattedOutput;
+    });
+
+    // 点击“复制格式文本”按钮的事件
+    copyButton.addEventListener('click', () => {
+      // 检查文本框中是否有内容
+      if (!outputField.value) {
+        alert('没有可复制的内容，请先格式化文本！');
+        return;
+      }
+
+      // 将文本框内容复制到剪贴板
+      navigator.clipboard.writeText(outputField.value)
+        .then(() => {
+          alert('复制成功！');
+        })
+        .catch(err => {
+          console.error('复制失败：', err);
+          alert('复制失败，请手动复制内容。');
+        });
+    });
+  </script>
+</body>
+</html>

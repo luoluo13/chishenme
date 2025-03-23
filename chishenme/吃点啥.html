@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <title>中午吃什么</title>
+    <meta name="keywords" content="中午吃什么" />
+    <meta name="description" content="中午吃什么" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="default.css" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71978237-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("菜谱", "UA-71978237-1");
+    </script>
+    <style>
+      /* 定义弹窗样式 */
+.custom-alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; /* 使用flex布局确保居中 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  z-index: 9999;
+  visibility: hidden; /* 默认隐藏 */
+  opacity: 0; /* 隐藏时透明度为0 */
+  transition: visibility 0s, opacity 0.3s ease; /* 添加过渡效果 */
+}
+
+.custom-alert-overlay.active {
+  visibility: visible; /* 可见 */
+  opacity: 1; /* 设置透明度为1 */
+}
+
+.custom-alert {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+}
+
+.custom-alert h3 {
+  margin: 0;
+  padding: 0 0 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.custom-alert button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #ff5500;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-alert button:hover {
+  background: #e04400;
+}
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>
+        中午吃什么，吃什么？
+        <br />
+        <br />
+        <b style="color: #ff5500" id="what"></b>
+      </h1>
+      <input type="button" value="开始" id="start" />
+      <input type="button" value="停止" id="stop" style="display: none" />
+    </div>
+
+    <!-- 自定义弹窗 -->
+		<div class="custom-alert-overlay" id="customAlert">
+		  <div class="custom-alert">
+		    <h3 id="alertMessage">这么作？今天别吃了！</h3>
+		    <button id="alertClose">确定</button>
+		  </div>
+		</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="菜谱.js"></script>
+    <script src="random.js"></script>
+    <script src="three_punch_combo.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        let foodIndex = 0; // 点击次数
+        let isRunning = false; // 是否开始了随机选菜
+
+        // 点击“开始”按钮
+        $("#start").click(function () {
+          if (isRunning) {
+            return; // 防止重复点击
+          }
+          isRunning = true;
+          foodIndex++;
+          if (foodIndex < 6) {
+            // 显示随机食物
+            const randomFood = foodList[Math.floor(Math.random() * foodList.length)];
+            $("#what").text(randomFood);
+          } else {
+            // 达到点击次数限制
+            $(this).hide(); // 隐藏开始按钮
+            $("#stop").show(); // 显示停止按钮
+          }
+        });
+
+        // 点击“停止”按钮
+        $("#stop").click(function () {
+          // 显示自定义弹窗
+          $("#customAlert").fadeIn();
+          $(this).hide(); // 隐藏停止按钮
+        });
+
+        // 关闭弹窗
+        $("#alertClose").click(function () {
+          $("#customAlert").fadeOut();
+        });
+      });
+    </script>
+  </body>
+</html>
